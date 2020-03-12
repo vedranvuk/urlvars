@@ -17,6 +17,8 @@ var (
 	ErrUrlVars = errorex.New("urlvars")
 	// ErrParse is a parse error.
 	ErrParse = ErrUrlVars.Wrap("parse error")
+	// ErrDupKey
+	ErrDupKey = ErrUrlVars.WrapFormat("duplicate key '%s'")
 )
 
 // parsepath extracts path from a raw url and splits it on elements.
@@ -30,12 +32,15 @@ func parsepath(rawurl string) ([]string, error) {
 
 // Path extracts specific path elements into a map of named variables.
 //
+// Path elements are marked as variables by prefixing an element with a colon.
+//
 // Example:
+//
 //  template := https://www.example.com/:root/:sub/:file
 //  rawurl := https://www.example.com/users/vedran/.listfiles.sh?action=list#listing
 //
 // returns a map with following values:
-// {"root": "users", "sub": "vedran", "file": ".listfiles.sh"}
+//  {"root": "users", "sub": "vedran", "file": ".listfiles.sh"}
 //
 // If an error occurs it is returned with a nil map.
 func Path(template, rawurl string) (map[string]string, error) {
@@ -56,7 +61,10 @@ func Path(template, rawurl string) (map[string]string, error) {
 
 	m := make(map[string]string)
 	for idx, val := range tmplelems {
-		if strings.HasPrefix(val, ":") && val != rawelems[idx] {
+		if strings.HasPrefix(val, ":") && val != rawelems[idx] && len(val) > 1 {
+			if _, exists := m[val[1:]]; exists {
+				return nil, ErrDupKey.WrapArgs(m[val[1:]])
+			}
 			m[val[1:]] = rawelems[idx]
 		}
 	}
