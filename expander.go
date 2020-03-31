@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+const (
+	// MatchAllTemplate is a template that matches all standard parts of an URL.
+	MatchAllTemplate = "{scheme}{userinfo}{hostname}{port}{path}{query}{fragment}"
+)
+
 // expand expands a known key enclosed in single curly braces or returns the key as is.
 func expand(key string, url *url.URL) (value string, expanded bool) {
 	expanded = true
