@@ -19,6 +19,8 @@ var (
 	ErrParse = ErrUrlVars.Wrap("parse error")
 	// ErrDupKey
 	ErrDupKey = ErrUrlVars.WrapFormat("duplicate key '%s'")
+	// ErrInvalidTemplate is returned when an invalid template is specified.
+	ErrInvalidTemplate = ErrUrlVars.Wrap("invalid template")
 )
 
 // parsepath extracts path from a raw url and splits it on elements.
@@ -42,6 +44,8 @@ func parsepath(rawurl string) ([]string, error) {
 // returns a map with following values:
 //  {"root": "users", "sub": "vedran", "file": ".listfiles.sh"}
 //
+// Extra path elements not matched by template are ignored.
+//
 // If an error occurs it is returned with a nil map.
 func Path(template, rawurl string) (map[string]string, error) {
 
@@ -55,12 +59,16 @@ func Path(template, rawurl string) (map[string]string, error) {
 		return nil, ErrParse.WrapCause("invalid raw url", err)
 	}
 
-	if len(tmplelems) != len(rawelems) {
-		return nil, ErrParse.Wrap("url and template parameter count missmatch")
+	if len(tmplelems) == 0 {
+		return nil, ErrInvalidTemplate
 	}
 
 	m := make(map[string]string)
+	rawcount := len(rawelems)
 	for idx, val := range tmplelems {
+		if idx >= rawcount {
+			break
+		}
 		if strings.HasPrefix(val, ":") && val != rawelems[idx] && len(val) > 1 {
 			if _, exists := m[val[1:]]; exists {
 				return nil, ErrDupKey.WrapArgs(m[val[1:]])
