@@ -13,32 +13,32 @@ func TestExpander(t *testing.T) {
 	}
 
 	testdata := []testitem{
-		testitem{
+		{
 			"https://user:pass@www.example.com:80/users/vedran/file.ext?action=view&mode=quick#top",
 			"{scheme}{userinfo}{hostname}{port}{path}{query}{fragment}",
 			"https://user:pass@www.example.com:80/users/vedran/file.ext?action=view&mode=quick#top",
 		},
-		testitem{
+		{
 			"https://user:pass@www.example.com:80/users/vedran/file.ext?action=view&mode=quick#top",
 			"1{scheme}2{userinfo}3{hostname}4{port}5{path}6{query}7{fragment}8",
 			"1https://2user:pass@3www.example.com4:805/users/vedran/file.ext6?action=view&mode=quick7#top8",
 		},
-		testitem{
+		{
 			"https://user:pass@www.example.com:80/users/vedran/file.ext?action=view&mode=quick#top",
 			"{bogus}{hostname}{bogus}",
 			"{bogus}www.example.com{bogus}",
 		},
-		testitem{
+		{
 			"https://user:pass@www.example.com:80/users/vedran/file.ext?action=view&mode=quick#top",
 			"{bogus{hostname}{bogus}",
 			"{boguswww.example.com{bogus}",
 		},
-		testitem{
+		{
 			"https://user:pass@www.example.com:80/users/vedran/file.ext?action=view&mode=quick#top",
 			"{{{bogus}{hostname}{bogus}",
 			"{{{bogus}www.example.com{bogus}",
 		},
-		testitem{
+		{
 			"https://user:pass@www.example.com:80/users/vedran/file.ext?action=view&mode=quick#top",
 			"{bogus}{{hostname}}{bogus}",
 			"{bogus}{www.example.com}{bogus}",

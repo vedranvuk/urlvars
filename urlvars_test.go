@@ -19,43 +19,43 @@ func TestURLVars(t *testing.T) {
 	}
 
 	testdata := []testitem{
-		testitem{
+		{
 			"https://www.example.com/home/vedran/temp/file.ext",
 			"https://www.example.com/:root/:dir/:subdir/:file",
 			map[string]string{"root": "home", "dir": "vedran", "subdir": "temp", "file": "file.ext"},
 			nil,
 		},
-		testitem{
+		{
 			"https://www.example.com/home/vedran/temp/file.ext",
 			"https://www.example.com/:root/:root/:root/:root",
 			map[string]string{},
 			ErrDupKey,
 		},
-		testitem{
+		{
 			"ThisIsNotAnURL",
 			"https://www.example.com/:root/:root/:root/:root",
 			map[string]string{},
 			nil,
 		},
-		testitem{
+		{
 			"https://www.example.com/home/vedran/temp/file.ext",
 			"bogus",
 			map[string]string{},
 			ErrInvalidTemplate,
 		},
-		testitem{
+		{
 			"https://www.example.com/one/two/",
 			"https://www.example.com/:one/:two/:three/",
 			map[string]string{"one": "one", "two": "two", "three": ""},
 			nil,
 		},
-		testitem{
+		{
 			"https://www.example.com/one/two/three/",
 			"https://www.example.com/:one/:two/",
 			map[string]string{"one": "one", "two": "two"},
 			nil,
 		},
-		testitem{
+		{
 			"https://www.example.com/one/two/three/",
 			"https://www.example.com/::one/:two:/::three::/",
 			map[string]string{":one": "one", "two:": "two", ":three::": "three"},

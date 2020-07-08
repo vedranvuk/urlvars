@@ -13,14 +13,14 @@ import (
 )
 
 var (
-	// ErrUrlVars is the base error of urlvars package.
-	ErrUrlVars = errorex.New("urlvars")
+	// ErrURLVars is the base error of urlvars package.
+	ErrURLVars = errorex.New("urlvars")
 	// ErrParse is a parse error.
-	ErrParse = ErrUrlVars.Wrap("parse error")
-	// ErrDupKey
-	ErrDupKey = ErrUrlVars.WrapFormat("duplicate key '%s'")
+	ErrParse = ErrURLVars.Wrap("parse error")
+	// ErrDupKey is returned when a duplicate key is specified.
+	ErrDupKey = ErrURLVars.WrapFormat("duplicate key '%s'")
 	// ErrInvalidTemplate is returned when an invalid template is specified.
-	ErrInvalidTemplate = ErrUrlVars.Wrap("invalid template")
+	ErrInvalidTemplate = ErrURLVars.Wrap("invalid template")
 )
 
 // parsepath extracts path from a raw url and splits it on elements.
